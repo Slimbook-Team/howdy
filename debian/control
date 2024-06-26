@@ -1,0 +1,14 @@
+Source: howdy
+Section: utils
+Priority: extra
+Maintainer: slimbook <dev@slimbook.es>
+Build-Depends: debhelper-compat (= 13), meson, ninja-build, g++ (>=11), pkg-config, libpam0g-dev, libevdev-dev
+Standards-Version: 4.6.0
+Homepage: https://github.com/Slimbook-Team/howdy
+Rules-Requires-Root: no
+ 
+Package: howdy
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libdlib-data, dlib-models
+Description: PAM facial recognition plugin
+ Howdy provides Windows Hello™ style authentication for Linux. Use your built-in IR emitters and camera in combination with facial recognition to prove who you are.

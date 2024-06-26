@@ -1,0 +1,15 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+	
+override_dh_auto_configure:
+	mkdir -p howdy/build
+	meson setup howdy/build
+
+override_dh_auto_build:
+	cd howdy/build
+	meson compile
+
+override_dh_install:
+	# nothing #

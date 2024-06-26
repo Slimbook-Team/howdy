@@ -1,0 +1,8 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: howdy
+Source: https://github.com/Slimbook-Team/howdy
+ 
+Files: *
+Copyright: 2018 Boltgolt <hey@boltgolt.nl>
+License: MIT
+ 
