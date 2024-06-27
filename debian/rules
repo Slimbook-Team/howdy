@@ -4,12 +4,12 @@
 	dh $@
 	
 override_dh_auto_configure:
-	mkdir -p howdy/build
-	meson setup howdy/build
+	mkdir -p build
+	meson setup build
+	meson configure build -Dinstall_pam_config=true -Dpam_dir=/usr/lib/security/howdy -Dconfig_dir=/etc/howdy -Ddlib_data_dir=/usr/share/dlib -Duser_models_dir=/usr/share/dlib-models -Ddata_dir=/usr/share/howdy
 
 override_dh_auto_build:
-	cd howdy/build
-	meson compile
+	ninja -C build
 
 override_dh_install:
 	# nothing #
