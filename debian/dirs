@@ -1,1 +1,4 @@
 /usr/share/howdy
+/usr/lib/howdy/
+/usr/lib/security/howdy/
+/etc/howdy/
