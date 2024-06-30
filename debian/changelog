@@ -1,3 +1,9 @@
+howdy (2.6.1+beta+slimbook1) noble; urgency=medium
+
+  * Added missing libini build dep
+
+ -- Slimbook <dev@slimbook.es>  Sun, 30 Jun 2024 22:46:36 +0200
+
 howdy (2.6.1+beta+slimbook0) noble; urgency=medium
 
   * Based on beta:aa75c76

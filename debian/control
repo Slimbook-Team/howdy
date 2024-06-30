@@ -2,7 +2,7 @@ Source: howdy
 Section: utils
 Priority: extra
 Maintainer: slimbook <dev@slimbook.es>
-Build-Depends: debhelper-compat (= 13), meson, ninja-build, g++ (>=11), pkg-config, libpam0g-dev, libevdev-dev
+Build-Depends: debhelper-compat (= 13), meson, ninja-build, g++ (>=11), pkg-config, libpam0g-dev, libevdev-dev, libinih-dev
 Standards-Version: 4.6.0
 Homepage: https://github.com/Slimbook-Team/howdy
 Rules-Requires-Root: no
