@@ -17,6 +17,7 @@ build/howdy/src/pam/pam_howdy.so /usr/lib/security/howdy/
 build/howdy/src/autocomplete /usr/share/bash-completion/completions/
 build/howdy/src/pam/howdy  /usr/share/pam-configs/
 build/howdy/src/howdy /usr/bin/
+build/howdy/src/paths.py /usr/lib/howdy/
 
 howdy/src/config.ini /etc/howdy/
 
