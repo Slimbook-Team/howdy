@@ -1,3 +1,5 @@
+howdy/src/paths_factory.py /usr/lib/howdy/
+
 howdy/src/cli /usr/lib/howdy/
 howdy/src/cli.py /usr/lib/howdy/
 
@@ -13,7 +15,7 @@ howdy/src/logo.png /usr/lib/howdy/
 build/howdy/src/pam/pam_howdy.so /usr/lib/security/howdy/
 
 build/howdy/src/autocomplete /usr/share/bash-completion/completions/
-build/howdy/src/pam-config  /usr/share/pam-configs/
+build/howdy/src/pam/howdy  /usr/share/pam-configs/
 build/howdy/src/howdy /usr/bin/
 
 howdy/src/config.ini /etc/howdy/

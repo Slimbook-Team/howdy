@@ -1,3 +1,9 @@
+howdy (2.6.1+beta+slimbook2) noble; urgency=medium
+
+  * Fixed missing and bad installation paths
+
+ -- Slimbook <dev@slimbook.es>  Mon, 01 Jul 2024 20:50:57 +0200
+
 howdy (2.6.1+beta+slimbook1) noble; urgency=medium
 
   * Added missing libini build dep

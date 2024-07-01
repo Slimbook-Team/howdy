@@ -10,6 +10,7 @@ override_dh_auto_configure:
 
 override_dh_auto_build:
 	ninja -C build
+	cp build/howdy/src/pam-config build/howdy/src/pam/howdy
 
 #override_dh_install:
 	# nothing #
