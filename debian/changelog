@@ -1,3 +1,9 @@
+howdy (2.6.1+beta+slimbook4) noble; urgency=medium
+
+  * Using disable-login patch
+
+ -- Slimbook <dev@slimbook.es>  Fri, 20 Sep 2024 10:52:10 +0200
+
 howdy (2.6.1+beta+slimbook3) noble; urgency=medium
 
   * Fixed missing and bad installation paths
