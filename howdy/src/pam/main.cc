@@ -219,6 +219,24 @@ auto identify(pam_handle_t *pamh, int flags, int argc, const char **argv,
   // Will contain the responses from PAM functions
   int pam_res = PAM_IGNORE;
 
+  // disable identification for known login services
+  if (config.GetBoolean("core", "disabled-login", false)) {
+    const void *service_output = nullptr;
+    if ((pam_get_item(pamh, PAM_SERVICE, &service_output)) == PAM_SUCCESS) {
+      std::string service = reinterpret_cast<const char*>(service_output);
+      
+      const std::vector<std::string> services = {"gdm-password","sddm"};
+      
+      for (std::string target:services) {
+        if (target == service) {
+          syslog(LOG_INFO,"Login not allowed for service:%s",service.c_str());
+          return pam_res;
+        }
+      }
+      
+    }
+  }
+  
   // Get the username from PAM, needed to match correct face model
   char *username = nullptr;
   if ((pam_res = pam_get_user(pamh, const_cast<const char **>(&username),
