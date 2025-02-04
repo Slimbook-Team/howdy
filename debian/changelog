@@ -1,3 +1,9 @@
+howdy (2.6.1+beta+slimbook4~bpo22.04.0) jammy; urgency=medium
+
+  * Jammy backport
+
+ -- Slimbook <dev@slimbook.es>  Tue, 04 Feb 2025 12:44:07 +0100
+
 howdy (2.6.1+beta+slimbook4) noble; urgency=medium
 
   * Using disable-login patch
