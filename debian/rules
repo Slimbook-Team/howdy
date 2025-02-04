@@ -5,7 +5,7 @@
 	
 override_dh_auto_configure:
 	mkdir -p build
-	meson setup build
+	meson setup --wipe build
 	meson configure build --prefix=/usr -Dinstall_pam_config=true -Dpam_dir=/usr/lib/security/howdy -Dconfig_dir=/etc/howdy -Ddlib_data_dir=/usr/share/dlib -Duser_models_dir=/usr/share/dlib -Dpy_sources_dir=/usr/lib
 
 override_dh_auto_build:
