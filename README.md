@@ -63,6 +63,14 @@ sudo dnf copr enable principis/howdy
 sudo dnf --refresh install howdy
 ```
 
+*Note:* Fedora 41 [removed support for Python2](https://fedoraproject.org/wiki/Changes/RetirePython2.7), but at this point in time Howdy still depends on it. If the install fails, you can fix this by installing the beta Repository and removing the release version:
+
+```
+sudo dnf copr remove principis/howdy
+sudo dnf copr enable principis/howdy-beta
+sudo dnf --refresh install howdy
+```
+
 See the link to the COPR repository for detailed configuration steps.
 
 ### openSUSE
@@ -92,7 +100,7 @@ To install them on Debian/Ubuntu for example:
 sudo apt-get update && sudo apt-get install -y \
 python3 python3-pip python3-setuptools python3-wheel \
 cmake make build-essential \
-libpam0g-dev libinih-dev libevdev-dev \
+libpam0g-dev libinih-dev libevdev-dev python3-opencv \
 python3-dev libopencv-dev
 ```
 

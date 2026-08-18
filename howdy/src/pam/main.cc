@@ -1,7 +1,6 @@
 #include <cerrno>
 #include <csignal>
 #include <cstdlib>
-#include <ostream>
 
 #include <glob.h>
 #include <libintl.h>
@@ -16,22 +15,15 @@
 #include <syslog.h>
 #include <unistd.h>
 
-#include <atomic>
 #include <chrono>
 #include <condition_variable>
 #include <cstring>
 #include <fstream>
 #include <functional>
 #include <future>
-#include <iostream>
-#include <iterator>
-#include <memory>
 #include <mutex>
 #include <string>
-#include <system_error>
-#include <thread>
 #include <tuple>
-#include <vector>
 
 #include <INIReader.h>
 
@@ -42,12 +34,11 @@
 #include "enter_device.hh"
 #include "main.hh"
 #include "optional_task.hh"
-#include "paths.hh"
+#include <paths.hh>
 
 const auto DEFAULT_TIMEOUT =
     std::chrono::duration<int, std::chrono::milliseconds::period>(100);
 const auto MAX_RETRIES = 5;
-const auto PYTHON_EXECUTABLE = "python3";
 
 #define S(msg) gettext(msg)
 
@@ -139,7 +130,7 @@ auto howdy_status(char *username, int status, const INIReader &config,
  * @return        Returns PAM_AUTHINFO_UNAVAIL if it shouldn't be enabled,
  * PAM_SUCCESS otherwise
  */
-auto check_enabled(const INIReader &config, const char* username) -> int {
+auto check_enabled(const INIReader &config, const char *username) -> int {
   // Stop executing if Howdy has been disabled in the config
   if (config.GetBoolean("core", "disabled", false)) {
     syslog(LOG_INFO, "Skipped authentication, Howdy is disabled");
@@ -148,8 +139,8 @@ auto check_enabled(const INIReader &config, const char* username) -> int {
 
   // Stop if we're in a remote shell and configured to exit
   if (config.GetBoolean("core", "abort_if_ssh", true)) {
-    if (getenv("SSH_CONNECTION") != nullptr ||
-        getenv("SSH_CLIENT") != nullptr || getenv("SSHD_OPTS") != nullptr) {
+    if (checkenv("SSH_CONNECTION") || checkenv("SSH_CLIENT") ||
+        checkenv("SSH_TTY") || checkenv("SSHD_OPTS")) {
       syslog(LOG_INFO, "Skipped authentication, SSH session detected");
       return PAM_AUTHINFO_UNAVAIL;
     }
@@ -199,7 +190,7 @@ auto check_enabled(const INIReader &config, const char* username) -> int {
  * The main function, runs the identification and authentication
  * @param  pamh     The handle to interface directly with PAM
  * @param  flags    Flags passed on to us by PAM, XORed
- * @param  argc     Amount of rules in the PAM config (disregared)
+ * @param  argc     Amount of rules in the PAM config (disregarded)
  * @param  argv     Options defined in the PAM config
  * @param  ask_auth_tok True if we should ask for a password too
  * @return          Returns a PAM return code
@@ -239,14 +230,15 @@ auto identify(pam_handle_t *pamh, int flags, int argc, const char **argv,
   
   // Get the username from PAM, needed to match correct face model
   char *username = nullptr;
-  if ((pam_res = pam_get_user(pamh, const_cast<const char **>(&username),
-                              nullptr)) != PAM_SUCCESS) {
+  pam_res = pam_get_user(pamh, const_cast<const char **>(&username), nullptr);
+  if (pam_res != PAM_SUCCESS) {
     syslog(LOG_ERR, "Failed to get username");
     return pam_res;
   }
 
   // Check if we should continue
-  if ((pam_res = check_enabled(config, username)) != PAM_SUCCESS) {
+  pam_res = check_enabled(config, username);
+  if (pam_res != PAM_SUCCESS) {
     return pam_res;
   }
 
@@ -258,7 +250,9 @@ auto identify(pam_handle_t *pamh, int flags, int argc, const char **argv,
   const void **conv_ptr =
       const_cast<const void **>(reinterpret_cast<void **>(&conv));
 
-  if ((pam_res = pam_get_item(pamh, PAM_CONV, conv_ptr)) != PAM_SUCCESS) {
+  // Retrieve the PAM conversation structure
+  pam_res = pam_get_item(pamh, PAM_CONV, conv_ptr);
+  if (pam_res != PAM_SUCCESS) {
     syslog(LOG_ERR, "Failed to acquire conversation");
     return pam_res;
   }
@@ -286,12 +280,12 @@ auto identify(pam_handle_t *pamh, int flags, int argc, const char **argv,
     }
   }
 
-  const char *const args[] = {PYTHON_EXECUTABLE, // NOLINT
+  const char *const args[] = {PYTHON_EXECUTABLE_PATH, // NOLINT
                               COMPARE_PROCESS_PATH, username, nullptr};
   pid_t child_pid;
 
   // Start the python subprocess
-  if (posix_spawnp(&child_pid, PYTHON_EXECUTABLE, nullptr, nullptr,
+  if (posix_spawnp(&child_pid, PYTHON_EXECUTABLE_PATH, nullptr, nullptr,
                    const_cast<char *const *>(args), nullptr) != 0) {
     syslog(LOG_ERR, "Can't spawn the howdy process: %s (%d)", strerror(errno),
            errno);
@@ -308,7 +302,7 @@ auto identify(pam_handle_t *pamh, int flags, int argc, const char **argv,
   // zombie process)
   optional_task<int> child_task([&] {
     int status;
-    wait(&status);
+    waitpid(child_pid, &status, 0);
     {
       std::unique_lock<std::mutex> lock(mutx);
       if (confirmation_type == ConfirmationType::Unset) {
