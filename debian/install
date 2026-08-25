@@ -21,4 +21,4 @@ build/howdy/src/paths.py /usr/lib/howdy/
 
 howdy/src/config.ini /etc/howdy/
 
-
+debian/10-howdy.conf /usr/lib/systemd/system/polkit-agent-helper@.service.d/
